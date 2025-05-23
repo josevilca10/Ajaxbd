@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Películas</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Listado de Películas</h1>
+<div id="resultado"></div>
+
+<script>
+$(document).ready(function() {
+  function cargarPeliculas() {
+    $.ajax({
+      url: 'http://127.0.0.1:5000/peliculas',
+      type: 'GET',
+      dataType: 'json',
+      success: function(response) {
+        if (response.error) {
+          $('#resultado').html(`<p>${response.error}</p>`);
+          return;
+        }
+
+        let html = '<ul>';
+        $.each(response, function(index, pelicula) {
+          html += `<li>${pelicula.titulo} - ${pelicula.director} (${pelicula.año})</li>`;
+        });
+        html += '</ul>';
+        $('#resultado').html(html);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $('#resultado').html(`<p>Error al cargar películas: ${textStatus} - ${errorThrown}</p>`);
+      }
+    });
+  }
+  cargarPeliculas();
+});
+</script>
+</body>
+</html>
